@@ -31,12 +31,20 @@ export class PreviewComponent implements OnInit {
   validateData(): void {
     this.rowErrors = this.csvData.map(row => {
       const errors: any = {};
-      if (!row.Name) errors.name = 'Empty value';
-      if (!row.Email || !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(row.Email)) errors.email = 'Invalid email';
-      if (!row['Phone Number'] || !/^\d{10}$/.test(row['Phone Number'])) errors.phoneNumber = 'Invalid phone number';
+      if (!row.Name) errors.name = 'Empty value'; 
+      if (!row.Email) {
+        errors.email = 'Empty email';
+      } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(row.Email)) {
+        errors.email = 'Invalid email';
+      }
+      if (!row['Phone Number']) {
+        errors.phoneNumber = 'Empty phone number';
+      } else if (!/^\d{10}$/.test(row['Phone Number'])) {
+        errors.phoneNumber = 'Invalid phone number';
+      }
       if (!row.City) errors.city = 'Empty value';
       if (!row.Address) errors.address = 'Empty value';
-      if (!row.GPA || isNaN(row.GPA) || row.GPA < 0 || row.GPA > 4) errors.gpa = 'Invalid GPA';
+      if (!row.GPA || isNaN(row.GPA) || row.GPA < 0 || row.GPA > 10) errors.gpa = 'Invalid GPA';
 
       return errors;
     });
