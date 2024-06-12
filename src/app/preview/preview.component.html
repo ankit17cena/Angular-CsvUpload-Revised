@@ -1,0 +1,39 @@
+<div>
+    <h2>CSV Data Preview</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone Number</th>
+                <th>City</th>
+                <th>Address</th>
+                <th>GPA</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let row of csvData; let i = index">
+                <td>{{ row.Name }}</td>
+                <td>{{ row.Email }}</td>
+                <td>{{ row['Phone Number'] }}</td>
+                <td>{{ row.City }}</td>
+                <td>{{ row.Address }}</td>
+                <td>{{ row.GPA }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <div>
+        <h3>Errors</h3>
+        <div *ngFor="let errors of rowErrors; let i = index">
+            <div *ngIf="objectKeys(errors).length > 0">
+                <p>Row {{ i + 1 }} ({{ csvData[i].Name }}):</p>
+                <ul>
+                    <li *ngFor="let error of objectKeys(errors)">
+                        {{ error }}: {{ errors[error] }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <button (click)="goToSummary()">Go to Summary</button>
+</div>
