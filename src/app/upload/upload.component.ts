@@ -1,19 +1,16 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
 import * as Papa from 'papaparse';
+import { DataService } from '../data.service'; 
 
 @Component({
   selector: 'app-upload',
   standalone: true,
   templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.css'],
-  imports: [CommonModule]
+  styleUrls: ['./upload.component.css'], 
 })
 export class UploadComponent {
-  csvData: any[] = [];
-
-  constructor(private router: Router) {}
+  constructor(private router: Router, private dataService: DataService) {}
 
   onFileChange(event: any): void {
     const file = event.target.files[0];
@@ -22,8 +19,9 @@ export class UploadComponent {
         header: true,
         skipEmptyLines: true,
         complete: (result) => {
-          this.csvData = result.data;
-          localStorage.setItem('csvData', JSON.stringify(this.csvData));
+          const metadata = result.meta.fields || [];
+          const csvData = result.data;
+          this.dataService.setCsvData(csvData, metadata);
         }
       });
     }
@@ -33,3 +31,5 @@ export class UploadComponent {
     this.router.navigate(['/preview']);
   }
 }
+
+

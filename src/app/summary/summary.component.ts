@@ -1,39 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-summary',
   standalone: true,
   templateUrl: './summary.component.html',
   styleUrls: ['./summary.component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, MatTableModule]
 })
 export class SummaryComponent implements OnInit {
   csvData: any[] = [];
+  metadata: string[] = [];
   rowErrors: any[] = [];
   correctRows = 0;
   incorrectRows = 0;
 
-//   ngOnInit(): void {
-//     const storedData = localStorage.getItem('csvData');
-//     if (storedData) {
-//       this.csvData = JSON.parse(storedData);
-//       this.validateData();
-//       this.calculateSummary();
-//     }
-//   }
+  constructor(private dataService: DataService) {}
 
   ngOnInit(): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const storedData = localStorage.getItem('csvData');
-      if (storedData) {
-        this.csvData = JSON.parse(storedData);
-        this.validateData();
-        this.calculateSummary();
-      }
-    } else {
-      console.error('localStorage is not available');
-    }
+    this.csvData = this.dataService.getCsvData();
+    this.metadata = this.dataService.getMetadata();
+    this.validateData();
+    this.calculateSummary();
   }
 
   validateData(): void {
@@ -44,7 +34,7 @@ export class SummaryComponent implements OnInit {
         errors.email = 'Empty email';
       } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(row.Email)) {
         errors.email = 'Invalid email';
-      }  
+      }
       if (!row['Phone Number']) {
         errors.phoneNumber = 'Empty phone number';
       } else if (!/^\d{10}$/.test(row['Phone Number'])) {

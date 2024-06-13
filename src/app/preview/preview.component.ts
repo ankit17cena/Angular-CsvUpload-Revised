@@ -1,32 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-preview',
   standalone: true,
   templateUrl: './preview.component.html',
   styleUrls: ['./preview.component.css'],
-  imports: [CommonModule]
+  imports: [CommonModule, MatTableModule, MatButtonModule]
 })
 export class PreviewComponent implements OnInit {
   csvData: any[] = [];
+  metadata: string[] = [];
   rowErrors: any[] = [];
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private dataService: DataService) {}
 
-    ngOnInit(): void {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const storedData = localStorage.getItem('csvData');
-      if (storedData) {
-        this.csvData = JSON.parse(storedData);
-        this.validateData();
-      }
-    } else {
-      console.error('localStorage is not available');
-    }
+  ngOnInit(): void {
+    this.csvData = this.dataService.getCsvData();
+    this.metadata = this.dataService.getMetadata();
+    this.validateData();
   }
-  
 
   validateData(): void {
     this.rowErrors = this.csvData.map(row => {

@@ -1,27 +1,15 @@
-<div>
+<div class="container">
     <h2>CSV Data Preview</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Phone Number</th>
-                <th>City</th>
-                <th>Address</th>
-                <th>GPA</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let row of csvData; let i = index">
-                <td>{{ row.Name }}</td>
-                <td>{{ row.Email }}</td>
-                <td>{{ row['Phone Number'] }}</td>
-                <td>{{ row.City }}</td>
-                <td>{{ row.Address }}</td>
-                <td>{{ row.GPA }}</td>
-            </tr>
-        </tbody>
+    <table mat-table [dataSource]="csvData" class="mat-elevation-z8">
+        <ng-container *ngFor="let column of metadata" [matColumnDef]="column">
+            <th mat-header-cell *matHeaderCellDef>{{ column }}</th>
+            <td mat-cell *matCellDef="let element">{{ element[column] }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="metadata"></tr>
+        <tr mat-row *matRowDef="let row; columns: metadata;"></tr>
     </table>
+
     <div>
         <h3>Errors</h3>
         <div *ngFor="let errors of rowErrors; let i = index">
@@ -35,5 +23,5 @@
             </div>
         </div>
     </div>
-    <button (click)="goToSummary()">Go to Summary</button>
+    <button mat-raised-button color="accent" (click)="goToSummary()">Go to Summary</button>
 </div>
